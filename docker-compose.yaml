@@ -1,0 +1,33 @@
+services:
+  rabbitmq-DDD:
+    image: rabbitmq:3.10-management
+    restart: unless-stopped
+    hostname: "rabbitmq"
+    ports:
+      - "15672:15672"
+      - "15692:15692"
+      - "5672:5672"
+      - "5552:5552"
+
+  mongo-DDD:
+    image: "mongo"
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password
+
+  eventstore-DDD:
+    image: ghcr.io/eventstore/eventstore:20.6.1-alpha.0.69-arm64v8
+    environment:
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_ENABLE_EXTERNAL_TCP=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_EXT_TCP_PORT=1113
+      - EVENTSTORE_HTTP_PORT=2113
+    ports:
+      - "1113:1113"
+      - "2113:2113"
